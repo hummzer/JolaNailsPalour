@@ -18,51 +18,45 @@ export default function Home() {
 	const services = [
 		{
 			name: "Classic Manicure",
-			price: "$35",
+			price: "4500 KES",
+			duration: "90 min",
+			description: "Foot soak, exfoliation, cuticle care, and polish application",
+		},
+		{
+			name: "Acrylics Gel",
+			price: "3000 KES",
 			duration: "45 min",
 			description: "Complete nail care with cuticle treatment, shaping, and polish",
 		},
 		{
-			name: "Gel Manicure",
-			price: "$45",
+			name: "Builder Gel",
+			price: "1000 KES",
 			duration: "60 min",
 			description: "Long-lasting gel polish with UV curing for 2-3 weeks wear",
 		},
 		{
-			name: "Nail Art Design",
-			price: "$55+",
-			duration: "75 min",
-			description: "Custom artistic designs, patterns, and decorative elements",
+			name: "Tips Gel",
+			price: "1500 KES",
+			duration: "80 min",
+			description: "Nail extensions using tips and gel for added length and strength",
 		},
 		{
-			name: "Classic Pedicure",
-			price: "$40",
-			duration: "50 min",
-			description: "Foot soak, exfoliation, cuticle care, and polish application",
-		},
-		{
-			name: "Spa Pedicure",
-			price: "$60",
-			duration: "75 min",
-			description: "Luxury treatment with massage, mask, and premium products",
-		},
-		{
-			name: "Nail Extensions",
-			price: "$65",
-			duration: "90 min",
-			description: "Acrylic or gel extensions for length and strength",
+			name: "Stick On Nails",
+			price: "1000 KES",
+			duration: "30 min",
+			description: "Quick and easy application of pre-designed stick-on nails for instant glam",
 		},
 	]
 
 	const portfolio = [
-		{ id: 1, category: "Nail Art", image: "/placeholder.svg" },
-		{ id: 2, category: "French Tips", image: "/placeholder.svg" },
-		{ id: 3, category: "Gel Polish", image: "/placeholder.svg" },
-		{ id: 4, category: "Pedicure", image: "/placeholder.svg" },
-		{ id: 5, category: "Extensions", image: "/placeholder.svg" },
-		{ id: 6, category: "Nail Art", image: "/placeholder.svg" },
-		{ id: 7, category: "Bridal", image: "/placeholder.svg" },
-		{ id: 8, category: "Seasonal", image: "/placeholder.svg" },
+		{ id: 1, category: "Nail Art", image: "/one.jpeg" },
+		{ id: 2, category: "French Tips", image: "/two.jpeg" },
+		{ id: 3, category: "Gel Polish", image: "/three.jpeg" },
+		{ id: 4, category: "Pedicure", image: "/four.jpeg" },
+		{ id: 5, category: "Extensions", image: "/five.jpeg" },
+		{ id: 6, category: "Nail Art", image: "/six.jpeg" },
+		{ id: 7, category: "Bridal", image: "/seven.jpeg" },
+		{ id: 8, category: "Seasonal", image: "/nine.jpeg" },
 	]
 
 	return (
@@ -208,7 +202,7 @@ export default function Home() {
 		<div className="max-w-4xl mx-auto text-center">
 		<div className="mb-12">
 		<Image
-		src="/placeholder.svg"
+		src="/him.jpeg"
 		alt="Nail Artist"
 		width={128}
 		height={128}
@@ -216,7 +210,7 @@ export default function Home() {
 		/>
 		<h2 className="text-4xl font-bold text-gray-800 mb-4">Meet Joseph</h2>
 		<p className="text-xl text-gray-600 leading-relaxed">
-		With over 2 years of experience in nail artistry, I&apos;m passionate about creating beautiful, healthy nails
+		With over 3 years of experience in nail artistry, I&apos;m passionate about creating beautiful, healthy nails
 		that make you feel confident and radiant. Every client receives personalized attention and the highest
 		quality care in a relaxing, luxurious environment.
 			</p>
@@ -228,7 +222,7 @@ export default function Home() {
 		<p className="text-gray-600">Happy Clients</p>
 		</div>
 		<div className="text-center">
-		<div className="text-3xl font-bold text-rose-500 mb-2">8</div>
+		<div className="text-3xl font-bold text-rose-500 mb-2">3</div>
 		<p className="text-gray-600">Years Experience</p>
 		</div>
 		<div className="text-center">
@@ -254,15 +248,15 @@ export default function Home() {
 		<div className="flex flex-col items-center">
 		<Mail className="w-8 h-8 mb-4" />
 		<h3 className="font-semibold mb-2">Email</h3>
-		<p>hello@jolanails.com</p>
+		<p>josephlalei2000@gmail</p>
 		</div>
 		<div className="flex flex-col items-center">
 		<MapPin className="w-8 h-8 mb-4" />
 		<h3 className="font-semibold mb-2">Visit Us</h3>
 		<p>
-		123 Eldoret
+		Eldoret
 		<br />
-		City, State 12345
+		Kenya, Town CBD
 		</p>
 		</div>
 		</div>
