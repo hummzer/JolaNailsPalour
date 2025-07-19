@@ -213,7 +213,7 @@ export default function Home() {
 		/>
 		<h2 className="text-4xl font-bold text-gray-800 mb-4">Meet Joseph</h2>
 		<p className="text-xl text-gray-600 leading-relaxed">
-		With over 2 years of experience in nail artistry, I'm passionate about creating beautiful, healthy nails
+		With over 2 years of experience in nail artistry, I&apos;m passionate about creating beautiful, healthy nails
 		that make you feel confident and radiant. Every client receives personalized attention and the highest
 		quality care in a relaxing, luxurious environment.
 			</p>
