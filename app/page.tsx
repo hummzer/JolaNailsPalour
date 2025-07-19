@@ -4,10 +4,10 @@ import { useState, useEffect } from "react"
 import { Phone, Mail, MapPin, Instagram, Facebook, Star, Sparkles, Heart, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
 
 export default function Home() {
 	const [scrollY, setScrollY] = useState(0)
-	const [activeService, setActiveService] = useState(0)
 
 	useEffect(() => {
 		const handleScroll = () => setScrollY(window.scrollY)
@@ -55,14 +55,14 @@ export default function Home() {
 	]
 
 	const portfolio = [
-		{ id: 1, category: "Nail Art", image: "/placeholder.svg?height=300&width=300" },
-		{ id: 2, category: "French Tips", image: "/placeholder.svg?height=300&width=300" },
-		{ id: 3, category: "Gel Polish", image: "/placeholder.svg?height=300&width=300" },
-		{ id: 4, category: "Pedicure", image: "/placeholder.svg?height=300&width=300" },
-		{ id: 5, category: "Extensions", image: "/placeholder.svg?height=300&width=300" },
-		{ id: 6, category: "Nail Art", image: "/placeholder.svg?height=300&width=300" },
-		{ id: 7, category: "Bridal", image: "/placeholder.svg?height=300&width=300" },
-		{ id: 8, category: "Seasonal", image: "/placeholder.svg?height=300&width=300" },
+		{ id: 1, category: "Nail Art", image: "/placeholder.svg" },
+		{ id: 2, category: "French Tips", image: "/placeholder.svg" },
+		{ id: 3, category: "Gel Polish", image: "/placeholder.svg" },
+		{ id: 4, category: "Pedicure", image: "/placeholder.svg" },
+		{ id: 5, category: "Extensions", image: "/placeholder.svg" },
+		{ id: 6, category: "Nail Art", image: "/placeholder.svg" },
+		{ id: 7, category: "Bridal", image: "/placeholder.svg" },
+		{ id: 8, category: "Seasonal", image: "/placeholder.svg" },
 	]
 
 	return (
@@ -133,7 +133,6 @@ export default function Home() {
 			<Card
 			key={index}
 			className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white/80 backdrop-blur-sm"
-			onMouseEnter={() => setActiveService(index)}
 			>
 			<CardContent className="p-6">
 			<div className="flex justify-between items-start mb-4">
@@ -183,9 +182,11 @@ export default function Home() {
 				animationDelay: `${index * 0.1}s`,
 			}}
 			>
-			<img
+			<Image
 			src={item.image}
 			alt={item.category}
+			width={300}
+			height={256}
 			className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
 			/>
 			<div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -206,9 +207,11 @@ export default function Home() {
 		<section className="py-20 px-4">
 		<div className="max-w-4xl mx-auto text-center">
 		<div className="mb-12">
-		<img
-		src="/placeholder.svg?height=200&width=200"
+		<Image
+		src="/placeholder.svg"
 		alt="Nail Artist"
+		width={128}
+		height={128}
 		className="w-32 h-32 rounded-full mx-auto mb-6 shadow-xl border-4 border-rose-200"
 		/>
 		<h2 className="text-4xl font-bold text-gray-800 mb-4">Meet Joseph</h2>
