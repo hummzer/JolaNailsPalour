@@ -1,1 +1,1 @@
-A static e commerce website for commercial use
+A Manicure pedicure business site
