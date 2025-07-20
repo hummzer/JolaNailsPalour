@@ -17,85 +17,64 @@ export default function PortfolioPage() {
       id: 1,
       title: "French Ombre Elegance",
       category: "Gel Manicure",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/nine.jpeg?height=400&width=400",
       description: "Classic French tips with a modern ombre twist",
     },
     {
       id: 2,
       title: "Floral Garden Art",
       category: "Nail Art",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/eight.jpeg?height=400&width=400",
       description: "Hand-painted floral designs with intricate details",
     },
     {
       id: 3,
       title: "Glitter Gradient Dreams",
       category: "Special Design",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/seven.jpeg?height=400&width=400",
       description: "Stunning glitter fade from pink to gold",
     },
     {
       id: 4,
       title: "Classic Red Glamour",
       category: "Classic Manicure",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/six.jpeg?height=400&width=400",
       description: "Timeless red polish with perfect application",
     },
     {
       id: 5,
       title: "Marble Masterpiece",
       category: "Nail Art",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/five.jpeg?height=400&width=400",
       description: "Sophisticated marble effect with gold accents",
     },
     {
       id: 6,
       title: "Pastel Rainbow",
       category: "Gel Manicure",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/four.jpeg?height=400&width=400",
       description: "Soft pastel colors in perfect harmony",
     },
     {
       id: 7,
       title: "Geometric Patterns",
       category: "Nail Art",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/three.jpeg?height=400&width=400",
       description: "Modern geometric designs with clean lines",
     },
     {
       id: 8,
       title: "Rose Gold Luxury",
       category: "Special Design",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/two.jpeg?height=400&width=400",
       description: "Luxurious rose gold with crystal embellishments",
     },
     {
       id: 9,
       title: "Butterfly Dreams",
       category: "Nail Art",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/one.jpeg?height=400&width=400",
       description: "Delicate butterfly wings in vibrant colors",
-    },
-    {
-      id: 10,
-      title: "Ocean Waves",
-      category: "Special Design",
-      image: "/placeholder.svg?height=400&width=400",
-      description: "Flowing ocean waves with pearl accents",
-    },
-    {
-      id: 11,
-      title: "Vintage Lace",
-      category: "Nail Art",
-      image: "/placeholder.svg?height=400&width=400",
-      description: "Intricate lace patterns with vintage charm",
-    },
-    {
-      id: 12,
-      title: "Sunset Gradient",
-      category: "Gel Manicure",
-      image: "/placeholder.svg?height=400&width=400",
-      description: "Beautiful sunset colors blending seamlessly",
     },
   ]
 
@@ -162,7 +141,7 @@ export default function PortfolioPage() {
             >
               <div className="relative overflow-hidden">
                 <Image
-                  src={item.image || "/placeholder.svg"}
+                  src={item.image || "/two.jpeg"}
                   alt={item.title}
                   width={400}
                   height={400}

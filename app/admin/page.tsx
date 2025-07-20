@@ -26,14 +26,14 @@ export default function AdminPage() {
       title: "French Ombre Elegance",
       category: "Gel Manicure",
       description: "Classic French tips with a modern ombre twist",
-      imageUrl: "/placeholder.svg?height=300&width=400",
+      imageUrl: "/four.jpeg?height=300&width=400",
     },
     {
       id: 2,
       title: "Floral Garden Art",
       category: "Nail Art",
       description: "Hand-painted floral designs with intricate details",
-      imageUrl: "/placeholder.svg?height=300&width=400",
+      imageUrl: "/two.jpeg?height=300&width=400",
     },
   ])
   const [newItem, setNewItem] = useState({
@@ -297,8 +297,10 @@ export default function AdminPage() {
                         </div>
                         <div className="mb-4">
                           <Image
-                            src={item.imageUrl || "/placeholder.svg"}
+                            src={item.imageUrl || "/one.jpeg"}
                             alt={item.title}
+                            width={400}
+                            height={400}
                             className="w-full h-32 object-cover rounded-lg shadow-sm"
                           />
                         </div>
@@ -375,15 +377,21 @@ export default function AdminPage() {
 
                   <div>
                     <Label htmlFor="imageUrl" className="text-gray-700 font-medium">
-                      Image URL (optional)
+                      Upload Image
                     </Label>
                     <Input
-                      id="imageUrl"
-                      type="url"
-                      value={newItem.imageUrl}
-                      onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
+                      id="image"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            const imageUrl = URL.createObjectURL(file);
+                            setNewItem({ ...newItem, imageUrl });
+                        }
+                    }}
                       className="border-pink-200 focus:border-pink-400"
-                      placeholder="https://example.com/nail-art-image.jpg"
+                      placeholder="Upload an image of the nail art"
                     />
                   </div>
 
