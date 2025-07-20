@@ -1,239 +1,484 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Phone, Mail, MapPin, Instagram, Facebook, Star, Sparkles, Heart, Calendar } from "lucide-react"
+import type React from "react"
+
+import { useState } from "react"
+import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import Image from "next/image"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Heart,
+  Sparkles,
+  Calendar,
+  Phone,
+  Mail,
+  MapPin,
+  Menu,
+  X,
+  ChevronDown,
+  Users,
+  Award,
+  ThumbsUp,
+} from "lucide-react"
 
-export default function Home() {
-  const [scrollY, setScrollY] = useState(0)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [name, setName] = useState("")
-  const [service, setService] = useState("")
-  const [phone, setPhone] = useState("")
+export default function HomePage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [bookingForm, setBookingForm] = useState({
+    name: "",
+    service: "",
+    phone: "",
+  })
 
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+    setIsMenuOpen(false)
+  }
 
   const services = [
     {
-      name: "Classic Manicure",
-      price: "4500 KES",
-      duration: "90 min",
-      description: "Foot soak, exfoliation, cuticle care, and polish application",
-    },
-    {
-      name: "Acrylics Gel",
-      price: "3000 KES",
+      title: "Classic Manicure",
+      description: "Professional nail care with cuticle treatment, shaping, and polish application.",
+      price: "KSh 1,500",
       duration: "45 min",
-      description: "Complete nail care with cuticle treatment, shaping, and polish",
+      features: ["Cuticle Care", "Nail Shaping", "Base & Top Coat", "Polish Application"],
     },
     {
-      name: "Builder Gel",
-      price: "1000 KES",
+      title: "Gel Manicure",
+      description: "Long-lasting gel polish that stays chip-free for up to 3 weeks.",
+      price: "KSh 2,500",
       duration: "60 min",
-      description: "Long-lasting gel polish with UV curing for 2-3 weeks wear",
+      features: ["Gel Polish", "UV Curing", "Long-lasting", "Chip Resistant"],
     },
     {
-      name: "Tips Gel",
-      price: "1500 KES",
-      duration: "80 min",
-      description: "Nail extensions using tips and gel for added length and strength",
+      title: "Nail Art Design",
+      description: "Custom nail art designs tailored to your style and preferences.",
+      price: "KSh 3,500",
+      duration: "90 min",
+      features: ["Custom Design", "Hand Painted", "Rhinestones", "Creative Patterns"],
     },
     {
-      name: "Stick On Nails",
-      price: "1000 KES",
-      duration: "30 min",
-      description: "Quick and easy application of pre-designed stick-on nails for instant glam",
+      title: "Pedicure Deluxe",
+      description: "Relaxing foot treatment with exfoliation, massage, and polish.",
+      price: "KSh 2,000",
+      duration: "75 min",
+      features: ["Foot Soak", "Exfoliation", "Massage", "Callus Removal"],
     },
   ]
 
-  const portfolio = [
-    { id: 1, category: "Nail Art", image: "/one.jpeg" },
-    { id: 2, category: "French Tips", image: "/two.jpeg" },
-    { id: 3, category: "Gel Polish", image: "/three.jpeg" },
-    { id: 4, category: "Pedicure", image: "/four.jpeg" },
-    { id: 5, category: "Extensions", image: "/five.jpeg" },
-    { id: 6, category: "Nail Art", image: "/six.jpeg" },
-    { id: 7, category: "Bridal", image: "/seven.jpeg" },
-    { id: 8, category: "Seasonal", image: "/nine.jpeg" },
+  const recentWork = [
+    {
+      title: "French Ombre",
+      category: "Gel Manicure",
+      image: "/one.jpeg?height=300&width=300",
+    },
+    {
+      title: "Floral Art",
+      category: "Nail Art",
+      image: "/two.jpeg?height=300&width=300",
+    },
+    {
+      title: "Glitter Gradient",
+      category: "Special Design",
+      image: "/three.jpeg?height=300&width=300",
+    },
+    {
+      title: "Classic Red",
+      category: "Classic Manicure",
+      image: "/four.jpeg?height=300&width=300",
+    },
+    {
+      title: "Marble Effect",
+      category: "Nail Art",
+      image: "/five.jpeg?height=300&width=300",
+    },
+    {
+      title: "Pastel Dreams",
+      category: "Gel Manicure",
+      image: "/six.jpeg?height=300&width=300",
+    },
   ]
 
-  const handleBookingSubmit = (e: { preventDefault: () => void }) => {
+  const stats = [
+    {
+      icon: Users,
+      number: "500+",
+      label: "Happy Clients",
+    },
+    {
+      icon: Award,
+      number: "3",
+      label: "Years Experience",
+    },
+    {
+      icon: ThumbsUp,
+      number: "100%",
+      label: "Satisfaction Rate",
+    },
+  ]
+
+  const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (name && service && phone) {
-      const message = `Booking: ${name}, ${service}, ${phone}`
-      window.location.href = `sms:+254115656723?body=${encodeURIComponent(message)}`
-      setIsModalOpen(false)
-      setName("")
-      setService("")
-      setPhone("")
-    }
+    const selectedService = services.find((s) => s.title === bookingForm.service)
+    if (!selectedService) return
+
+    const message = `Hi Joseph! I'd like to book an appointment:
+    
+    Name: ${bookingForm.name}
+    Service: ${selectedService.title}
+    Price: ${selectedService.price}
+    Duration: ${selectedService.duration}
+    Phone: ${bookingForm.phone}
+
+    Please confirm my appointment. Thank you!`
+
+    const whatsappUrl = `https://wa.me/254115656723?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, "_blank")
+
+    // Reset form
+    setBookingForm({ name: "", service: "", phone: "" })
+  }
+
+  const handleCall = () => {
+    window.location.href = "tel:+254115656723"
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50">
-      {/* Modal for Booking */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-2xl shadow-xl max-w-md w-full">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Book Appointment</h2>
-            <form onSubmit={handleBookingSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-600 mb-2">Name</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-600 mb-2">Service</label>
-                <select
-                  value={service}
-                  onChange={(e) => setService(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
-                  required
+    <div className="min-h-screen font-poppins">
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        .font-inter {
+          font-family: 'Inter', sans-serif;
+        }
+        
+        .font-playfair {
+          font-family: 'Playfair Display', serif;
+        }
+        
+        .font-poppins {
+          font-family: 'Poppins', sans-serif;
+        }
+        
+        .animate-bounce-slow {
+          animation: bounce 3s infinite;
+        }
+        
+        .animate-wiggle {
+          animation: wiggle 2s ease-in-out infinite;
+        }
+        
+        @keyframes wiggle {
+          0%, 7% { transform: rotateZ(0); }
+          15% { transform: rotateZ(-15deg); }
+          20% { transform: rotateZ(10deg); }
+          25% { transform: rotateZ(-10deg); }
+          30% { transform: rotateZ(6deg); }
+          35% { transform: rotateZ(-4deg); }
+          40%, 100% { transform: rotateZ(0); }
+        }
+      `}</style>
+
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-pink-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex-shrink-0">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent font-playfair">
+                Jola Nails
+              </h1>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-8 font-medium">
+                <button
+                  onClick={() => scrollToSection("home")}
+                  className="text-gray-700 hover:text-pink-600 transition-colors"
                 >
-                  <option value="">Select a service</option>
-                  {services.map((s) => (
-                    <option key={s.name} value={s.name}>
-                      {s.name} ({s.price})
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-600 mb-2">Phone Number</label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div className="flex justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsModalOpen(false)}
-                  className="border-rose-300 text-rose-600"
+                  Home
+                </button>
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-gray-700 hover:text-pink-600 transition-colors"
                 >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className="bg-gradient-to-r from-rose-400 to-pink-500 text-white"
+                  Services
+                </button>
+                <button
+                  onClick={() => scrollToSection("work")}
+                  className="text-gray-700 hover:text-pink-600 transition-colors"
                 >
-                  Submit
-                </Button>
+                  Our Work
+                </button>
+                <button
+                  onClick={() => scrollToSection("about")}
+                  className="text-gray-700 hover:text-pink-600 transition-colors"
+                >
+                  About
+                </button>
+                <button
+                  onClick={() => scrollToSection("contact")}
+                  className="text-gray-700 hover:text-pink-600 transition-colors"
+                >
+                  Contact
+                </button>
               </div>
-            </form>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-700 hover:text-pink-600">
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
         </div>
-      )}
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-pink-100">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <button
+                onClick={() => scrollToSection("home")}
+                className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors w-full text-left font-medium"
+              >
+                Home
+              </button>
+              <button
+                onClick={() => scrollToSection("services")}
+                className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors w-full text-left font-medium"
+              >
+                Services
+              </button>
+              <button
+                onClick={() => scrollToSection("work")}
+                className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors w-full text-left font-medium"
+              >
+                Our Work
+              </button>
+              <button
+                onClick={() => scrollToSection("about")}
+                className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors w-full text-left font-medium"
+              >
+                About
+              </button>
+              <button
+                onClick={() => scrollToSection("contact")}
+                className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors w-full text-left font-medium"
+              >
+                Contact
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${3 + Math.random() * 2}s`,
-              }}
-            >
-              <Sparkles className="w-4 h-4 text-pink-300 opacity-60" />
-            </div>
-          ))}
+      <section
+        id="home"
+        className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 relative overflow-hidden flex items-center justify-center"
+      >
+        {/* Decorative Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <Heart className="absolute top-20 left-10 text-pink-300 w-6 h-6 animate-pulse" />
+          <Sparkles className="absolute top-32 right-20 text-purple-300 w-4 h-4 animate-bounce" />
+          <Heart className="absolute top-40 left-1/4 text-rose-300 w-5 h-5 animate-pulse delay-1000" />
+          <Sparkles className="absolute top-60 right-1/3 text-pink-300 w-3 h-3 animate-bounce delay-500" />
+          <Heart className="absolute bottom-40 right-10 text-purple-300 w-4 h-4 animate-pulse delay-2000" />
+          <Sparkles className="absolute bottom-60 left-20 text-rose-300 w-5 h-5 animate-bounce delay-1500" />
+          <Heart className="absolute bottom-20 left-1/3 text-pink-300 w-6 h-6 animate-pulse delay-500" />
+          <Sparkles className="absolute top-1/2 left-10 text-purple-300 w-4 h-4 animate-bounce delay-2000" />
+          <Heart className="absolute top-1/2 right-16 text-rose-300 w-5 h-5 animate-pulse delay-1500" />
         </div>
 
-        <div
-          className="text-center z-10 px-4"
-          style={{
-            transform: `translateY(${scrollY * 0.3}px)`,
-          }}
-        >
-          <div className="mb-6">
-            <Heart className="w-16 h-16 text-rose-400 mx-auto mb-4 animate-pulse" />
+        <div className="text-center z-10 px-4">
+          <div className="mb-8">
+            <Heart className="w-16 h-16 text-pink-400 mx-auto mb-6 animate-wiggle" />
           </div>
-          <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-rose-400 via-pink-500 to-purple-500 bg-clip-text text-transparent mb-4 animate-fade-in">
+
+          <h1 className="text-6xl sm:text-8xl font-bold mb-6 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 bg-clip-text text-transparent font-playfair animate-bounce-slow">
             Jola Nails
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 animate-fade-in-delay">Where Beauty Meets Artistry</p>
+
+          <p className="text-xl sm:text-2xl text-gray-600 mb-12 font-poppins font-medium">
+            Where Beauty Meets Artistry
+          </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 font-medium"
+                >
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Book Appointment
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-playfair text-center">Book Appointment</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleBookingSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      value={bookingForm.name}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBookingForm({ ...bookingForm, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="service">Service</Label>
+                    <Select
+                      value={bookingForm.service}
+                      onValueChange={(value) => setBookingForm({ ...bookingForm, service: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a service" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {services.map((service) => (
+                          <SelectItem key={service.title} value={service.title}>
+                            {service.title} - {service.price}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={bookingForm.phone}
+                      onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+                  >
+                    Send Booking Request
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+
             <Button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white px-8 py-3 rounded-full text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              <Calendar className="w-5 h-5 mr-2" />
-              Book Appointment
-            </Button>
-            <Button
+              size="lg"
               variant="outline"
-              className="border-2 border-rose-300 text-rose-600 hover:bg-rose-50 px-8 py-3 rounded-full text-lg transition-all duration-300 transform hover:scale-105 bg-transparent"
+              className="border-2 border-pink-300 text-pink-600 hover:bg-pink-50 px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-transparent font-medium"
+              onClick={() => scrollToSection("work")}
             >
               View Portfolio
             </Button>
           </div>
-        </div>
 
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-rose-300 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-rose-400 rounded-full mt-2 animate-pulse"></div>
+          <div className="mt-16">
+            <ChevronDown
+              className="w-8 h-8 text-pink-400 mx-auto animate-bounce cursor-pointer"
+              onClick={() => scrollToSection("services")}
+            />
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section id="services" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Our Services</h2>
-            <p className="text-xl text-gray-600">Professional nail care tailored to your style</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 font-playfair">Our Services</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
+              Indulge in our premium nail care services, where every detail is crafted with precision and artistry.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {services.map((service, index) => (
               <Card
                 key={index}
-                className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 bg-white/80 backdrop-blur-sm"
+                className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-3 bg-gradient-to-br from-white to-pink-50"
               >
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800 group-hover:text-rose-600 transition-colors">
-                      {service.name}
-                    </h3>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-rose-500">{service.price}</div>
-                      <div className="text-sm text-gray-500">{service.duration}</div>
+                <CardContent className="p-8">
+                  <div className="mb-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 font-playfair">{service.title}</h3>
+                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">{service.description}</p>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="text-3xl font-bold text-pink-600 font-playfair">{service.price}</div>
+                      <Badge variant="outline" className="text-purple-600 border-purple-300 font-medium">
+                        {service.duration}
+                      </Badge>
                     </div>
                   </div>
-                  <p className="text-gray-600 leading-relaxed">{service.description}</p>
-                  <div className="mt-4 flex justify-between items-center">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <Button
-                      size="sm"
-                      className="bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
-                    >
-                      Book Now
-                    </Button>
+
+                  <div className="space-y-3 mb-6">
+                    {service.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-center">
+                        <div className="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mr-3"></div>
+                        <span className="text-gray-700 text-sm font-medium">{feature}</span>
+                      </div>
+                    ))}
                   </div>
+
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full transition-all duration-300 font-medium">
+                        Book Now
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl font-playfair text-center">Book {service.title}</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleBookingSubmit} className="space-y-4">
+                        <div>
+                          <Label htmlFor="name">Full Name</Label>
+                          <Input
+                            id="name"
+                            value={bookingForm.name}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBookingForm({ ...bookingForm, name: e.target.value })}
+                            required                            
+                          />
+                        </div>
+                        <div>
+                          <Label>Service Selected</Label>
+                          <div className="p-3 bg-pink-50 rounded-lg">
+                            <p className="font-medium">{service.title}</p>
+                            <p className="text-pink-600 font-bold">{service.price}</p>
+                            <p className="text-sm text-gray-600">{service.duration}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="phone">Phone Number</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            value={bookingForm.phone}
+                            onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
+                            required
+                          />
+                        </div>
+                        <Button
+                          type="submit"
+                          className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+                          onClick={() => setBookingForm({ ...bookingForm, service: service.title })}
+                        >
+                          Send Booking Request
+                        </Button>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             ))}
@@ -241,48 +486,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Portfolio Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-rose-100/50 to-pink-100/50">
-        <div className="max-w-6xl mx-auto">
+      {/* Our Work Section */}
+      <section id="work" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-pink-50 to-purple-50">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Our Work</h2>
-            <p className="text-xl text-gray-600">Every nail tells a story of beauty and creativity</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 font-playfair">Our Work</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 font-medium">
+              Discover our latest nail art creations and see why our clients love coming back for more.
+            </p>
+            <Link href="/portfolio">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-2 border-pink-300 text-pink-600 hover:bg-pink-50 px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-transparent font-medium"
+              >
+                View Full Gallery
+                <ChevronDown className="ml-2 h-5 w-5 rotate-[-90deg]" />
+              </Button>
+            </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {portfolio.map((item, index) => (
-              <div
-                key={item.id}
-                className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                }}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {recentWork.map((work, index) => (
+              <Card
+                key={index}
+                className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2"
               >
-                <Image
-                  src={item.image}
-                  alt={item.category}
-                  width={300}
-                  height={256}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <p className="font-semibold">{item.category}</p>
+                <div className="relative overflow-hidden">
+                  <Image
+                    src={work.image || "/placeholder.svg"}
+                    alt={work.title}
+                    width={300}
+                    height={300}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <div className="text-white">
+                      <Badge variant="secondary" className="mb-2 bg-white/20 text-white border-white/30 font-medium">
+                        {work.category}
+                      </Badge>
+                      <h3 className="text-xl font-semibold font-playfair">{work.title}</h3>
+                    </div>
                   </div>
                 </div>
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Heart className="w-6 h-6 text-white hover:text-rose-400 cursor-pointer transition-colors" />
-                </div>
-              </div>
+                <CardContent className="p-6 bg-gradient-to-br from-white to-pink-50">
+                  <Badge variant="outline" className="mb-3 text-purple-600 border-purple-300 font-medium">
+                    {work.category}
+                  </Badge>
+                  <h3 className="text-xl font-semibold text-gray-900 font-playfair">{work.title}</h3>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-12">
+      {/* About Section - Meet Joseph */}
+      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 font-playfair">Meet Joseph</h2>
+
+            {/* Add profile image */}
+            <div className="mb-8">
+              <div className="w-32 h-32 mx-auto rounded-full overflow-hidden shadow-2xl border-4 border-gradient-to-r from-pink-300 to-purple-300 p-1 bg-gradient-to-r from-pink-300 to-purple-300">
             <Image
               src="/him.jpeg"
               alt="Nail Artist"
@@ -290,108 +557,186 @@ export default function Home() {
               height={128}
               className="w-32 h-32 rounded-full mx-auto mb-6 shadow-xl border-4 border-rose-200"
             />
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Meet Joseph</h2>
-            <p className="text-xl text-gray-600 leading-relaxed">
+              </div>
+            </div>
+
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed">
               With over 3 years of experience in nail artistry, I&apos;m passionate about creating beautiful, healthy nails
               that make you feel confident and radiant. Every client receives personalized attention and the highest
               quality care in a relaxing, luxurious environment.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-rose-500 mb-2">500+</div>
-              <p className="text-gray-600">Happy Clients</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-rose-500 mb-2">3</div>
-              <p className="text-gray-600">Years Experience</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-rose-500 mb-2">100%</div>
-              <p className="text-gray-600">Satisfaction Rate</p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            {stats.map((stat, index) => (
+              <div key={index} className="flex flex-col items-center group">
+                <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <stat.icon className="h-10 w-10 text-pink-600" />
+                </div>
+                <h3 className="text-4xl font-bold text-gray-900 mb-2 font-playfair">{stat.number}</h3>
+                <p className="text-lg text-gray-600 font-medium">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-rose-500 to-pink-600 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">Get In Touch</h2>
-          <p className="text-xl mb-12 opacity-90">Ready to pamper yourself? Book your appointment today!</p>
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-pink-50 to-purple-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 font-playfair">Get In Touch</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
+              Ready to pamper yourself? Get in touch with us to schedule your next nail appointment.
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="grid md:grid-cols-3 gap-12 text-center">
             <div className="flex flex-col items-center">
-              <a href="tel:+254115656723" className="hover:scale-110 transition-transform">
-                <Phone className="w-8 h-8 mb-4" />
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mb-6">
+                <Phone className="h-8 w-8 text-pink-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 font-playfair">Call Us</h3>
+              <button
+                onClick={handleCall}
+                className="text-gray-600 text-lg font-medium hover:text-pink-600 transition-colors cursor-pointer"
+              >
+                +254 115 656 723
+              </button>
+              <p className="text-gray-500 text-sm mt-2">Mon-Sat: 9AM-7PM</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mb-6">
+                <Mail className="h-8 w-8 text-pink-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 font-playfair">Email</h3>
+              <a
+                href="mailto:josephlalei2000@gmail.com"
+                className="text-gray-600 text-lg font-medium hover:text-pink-600 transition-colors"
+              >
+                josephlalei2000@gmail.com
               </a>
-              <h3 className="font-semibold mb-2">Call Us</h3>
-              <p>+254 115 656 723</p>
+              <p className="text-gray-500 text-sm mt-2">We reply within 24hrs</p>
             </div>
+
             <div className="flex flex-col items-center">
-              <Mail className="w-8 h-8 mb-4" />
-              <h3 className="font-semibold mb-2">Email</h3>
-              <p>josephlalei2000@gmail</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <MapPin className="w-8 h-8 mb-4" />
-              <h3 className="font-semibold mb-2">Visit Us</h3>
-              <p>
-                Eldoret
-                <br />
-                Kenya, Town CBD
-              </p>
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mb-6">
+                <MapPin className="h-8 w-8 text-pink-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 font-playfair">Visit Us</h3>
+              <p className="text-gray-600 text-lg font-medium">Eldoret</p>
+              <p className="text-gray-500 text-sm mt-2">Kenya, Town CBD</p>
             </div>
           </div>
 
-          <div className="flex justify-center space-x-6 mb-8">
-            <a href="https://www.instagram.com/jolanails2023?utm_source=qr&igsh=MTVncWE5MW5xam1mdw==" target="_blank" rel="noopener noreferrer">
-              <Instagram className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" />
-            </a>
-            <a href="https://www.facebook.com/hassan.jola?mibextid=rS40aB7S9Ucbxw6v" target="_blank" rel="noopener noreferrer">
-              <Facebook className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" />
-            </a>
+          <div className="text-center mt-12">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-12 py-4 text-xl rounded-full shadow-lg hover:shadow-xl transition-all duration-300 font-medium"
+                >
+                  <Calendar className="mr-3 h-6 w-6" />
+                  Book Appointment Now
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-playfair text-center">Book Appointment</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleBookingSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      value={bookingForm.name}
+                      onChange={(e) => setBookingForm({ ...bookingForm, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="service">Service</Label>
+                    <Select
+                      value={bookingForm.service}
+                      onValueChange={(value) => setBookingForm({ ...bookingForm, service: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a service" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {services.map((service) => (
+                          <SelectItem key={service.title} value={service.title}>
+                            {service.title} - {service.price}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={bookingForm.phone}
+                      onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+                  >
+                    Send Booking Request
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
-
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-white text-rose-600 hover:bg-gray-100 px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-          >
-            <Calendar className="w-5 h-5 mr-2" />
-            Book Your Appointment
-          </Button>
         </div>
       </section>
 
       {/* Footer */}
-	  <footer className="py-8 px-4 bg-gray-900 text-white text-center">
-        <p>© 2025 Jola Nails. All rights reserved. Made by <a href="https://hummzer.vercel.app/" target="_blank" rel="noopener noreferrer" className="underline hover:text-rose-400 transition-colors">Hummzer</a>.</p>
+      <footer className="bg-gradient-to-r from-pink-900 to-purple-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent font-playfair">
+            Jola Nails
+          </h3>
+          <p className="text-pink-200 mb-6 text-lg font-poppins font-medium">Where Beauty Meets Artistry</p>
+          <div className="flex justify-center space-x-6 mb-6">
+            <Heart className="w-6 h-6 text-pink-300 animate-pulse" />
+            <Sparkles className="w-6 h-6 text-purple-300 animate-bounce" />
+            <Heart className="w-6 h-6 text-rose-300 animate-pulse delay-1000" />
+          </div>
+          <p className="text-pink-300 text-sm font-medium mb-4">© 2024 Jola Nails. All rights reserved.</p>
+          <p className="text-pink-200 text-sm">
+            Made with ❤️ by{" "}
+            <a
+              href="https://hummzer.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white font-semibold hover:text-pink-300 transition-colors underline decoration-pink-300 hover:decoration-white"
+            >
+              Hummzer
+            </a>
+          </p>
+        </div>
       </footer>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fade-in-delay {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-        .animate-fade-in {
-          animation: fade-in 1s ease-out;
-        }
-        .animate-fade-in-delay {
-          animation: fade-in-delay 1s ease-out 0.3s both;
-        }
-      `}</style>
     </div>
   )
 }
+
+
+
+
+
+
+
+          // <div className="flex justify-center space-x-6 mb-8">
+          //   <a href="https://www.instagram.com/jolanails2023?utm_source=qr&igsh=MTVncWE5MW5xam1mdw==" target="_blank" rel="noopener noreferrer">
+          //     <Instagram className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" />
+          //   </a>
+          //   <a href="https://www.facebook.com/hassan.jola?mibextid=rS40aB7S9Ucbxw6v" target="_blank" rel="noopener noreferrer">
+          //     <Facebook className="w-8 h-8 hover:scale-110 transition-transform cursor-pointer" />
+          //   </a>
+          // </div>
